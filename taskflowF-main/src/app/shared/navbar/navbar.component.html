@@ -1,0 +1,51 @@
+<header class="nav">
+  <div class="nav__bar">
+
+    <!-- ✅ TaskFlow now navigates -->
+    <a class="nav__brand">
+      <span class="brand-dot"></span> TaskFlow
+    </a>
+
+    <!-- ✅ Dashboard button -->
+    <a
+      class="nav__link"
+      routerLink="/dashboard"
+      *ngIf="auth.isAuthenticated()">
+      Dashboard
+    </a>
+
+    <a
+      class="nav__link"
+      routerLink="/teams"
+      *appHasRole="['ADMIN','MANAGER']">
+      Teams
+    </a>
+
+    <a
+      class="nav__link"
+      routerLink="/admin"
+      *appHasRole="['ADMIN']">
+      Admin
+    </a>
+
+    <a
+      class="nav__link"
+      routerLink="/settings"
+      *ngIf="auth.isAuthenticated()">
+      Settings
+    </a>
+
+    <div class="nav__spacer"></div>
+
+    <ng-container *ngIf="auth.isAuthenticated(); else guest">
+      <span>Hello, {{ fullName }}</span>
+      <button class="nav__btn" (click)="auth.logout()">Logout</button>
+    </ng-container>
+
+    <ng-template #guest>
+      <a class="nav__btn" routerLink="/login">Login</a>
+      <a class="nav__btn" routerLink="/register">Register</a>
+    </ng-template>
+
+  </div>
+</header>

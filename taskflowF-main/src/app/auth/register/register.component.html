@@ -1,0 +1,124 @@
+<app-navbar></app-navbar>
+
+<div class="register-container">
+  <!-- LEFT PANEL -->
+  <div class="register-left">
+    <h1 class="brand-title">TaskFlow</h1>
+    <p class="brand-text">Join thousands of teams<br />building better workflows.</p>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="register-right">
+    <div class="card">
+      <h2 class="page-title">Create your Account</h2>
+      <p class="subtitle">It's free and only takes a minute</p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="form">
+        <!-- FULL NAME -->
+        <label for="fullName" class="form-label">Full Name</label>
+        <input
+          id="fullName"
+          class="form-input"
+          formControlName="fullName"
+          placeholder="Your name"
+          autocomplete="name"
+          [attr.aria-invalid]="fullNameCtrl.invalid && fullNameCtrl.touched"
+        />
+        <div class="form__error" *ngIf="fullNameCtrl.touched && fullNameCtrl.hasError('required')">
+          Name is required.
+        </div>
+
+        <!-- EMAIL -->
+        <label for="email" class="form-label">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          class="form-input"
+          formControlName="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          [attr.aria-invalid]="emailCtrl.invalid && emailCtrl.touched"
+        />
+        <div class="form__error" *ngIf="emailCtrl.touched && emailCtrl.hasError('required')">
+          Email is required.
+        </div>
+        <div class="form__error" *ngIf="emailCtrl.touched && emailCtrl.hasError('email')">
+          Please enter a valid email.
+        </div>
+
+        <!-- PASSWORD -->
+        <label for="password" class="form-label">Password</label>
+        <input
+          id="password"
+          type="password"
+          class="form-input"
+          formControlName="password"
+          placeholder="Min. 8 characters"
+          autocomplete="new-password"
+          [attr.aria-invalid]="passwordCtrl.invalid && passwordCtrl.touched"
+        />
+
+        <div class="form__help">Password strength:</div>
+        <div class="strength">
+          <span class="bar" [class.fill]="strengthLevel >= 1"></span>
+          <span class="bar" [class.fill]="strengthLevel >= 2"></span>
+          <span class="bar" [class.fill]="strengthLevel >= 3"></span>
+          <span class="bar" [class.fill]="strengthLevel >= 4"></span>
+          <span class="bar" [class.fill]="strengthLevel >= 5"></span>
+
+          <span
+            class="strength__label"
+            [ngClass]="{
+              weak: strengthLabel === 'Weak',
+              good: strengthLabel === 'Good',
+              strong: strengthLabel === 'Strong'
+            }"
+          >
+            {{ strengthLabel }}
+          </span>
+        </div>
+
+        <div class="form__error" *ngIf="passwordCtrl.touched && passwordCtrl.hasError('required')">
+          Password is required.
+        </div>
+        <div class="form__error" *ngIf="passwordCtrl.touched && passwordCtrl.hasError('minlength')">
+          Minimum 8 characters.
+        </div>
+
+        <!-- CONFIRM PASSWORD -->
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          class="form-input"
+          formControlName="confirmPassword"
+          placeholder="Re-enter password"
+          autocomplete="new-password"
+          [attr.aria-invalid]="(confirmPasswordCtrl.invalid && confirmPasswordCtrl.touched) || (form.hasError('mismatch') && confirmPasswordCtrl.touched)"
+        />
+
+        <div class="form__error" *ngIf="confirmPasswordCtrl.touched && confirmPasswordCtrl.hasError('required')">
+          Confirm password is required.
+        </div>
+        <div class="form__error" *ngIf="form.hasError('mismatch') && confirmPasswordCtrl.value">
+          Passwords do not match.
+        </div>
+
+        <!-- SUBMIT -->
+        <button class="btn primary" type="submit" [disabled]="form.invalid || loading">
+          {{ loading ? 'Creating…' : 'Create Account' }}
+        </button>
+
+        <p class="login-link">
+          Already have an account?
+          <a routerLink="/login">Sign in here</a>
+        </p>
+
+        <div class="alert alert-error" *ngIf="error">{{ error }}</div>
+        <div class="alert alert-success" *ngIf="success">
+          Registration successful! You can login now.
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

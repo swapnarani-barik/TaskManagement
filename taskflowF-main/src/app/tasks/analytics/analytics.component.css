@@ -1,0 +1,23 @@
+.analytics-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 10px 18px 18px;
+  background: #eef2f6;
+  min-height: calc(100vh - 64px);
+}
+
+.analytics-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.btn {
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  background: #ffffff;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}

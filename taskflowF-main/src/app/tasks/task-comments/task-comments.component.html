@@ -1,0 +1,25 @@
+<div class="comments">
+  <h4 class="comments__title">Comments</h4>
+
+  <div *ngIf="loading" class="comments__loading">Loading...</div>
+  <div *ngIf="error" class="comments__error">{{ error }}</div>
+
+  <div class="comment" *ngFor="let c of comments">
+    <div class="comment__avatar">{{ c.authorName.charAt(0) }}</div>
+
+    <div class="comment__main">
+      <div class="comment__top">
+        <span class="comment__author">{{ c.authorName }}</span>
+        <span class="comment__time">{{ relativeTime(c.createdAt) }}</span>
+        <button *ngIf="c.authorId === getCurrentUserId()" class="comment__delete" (click)="deleteComment(c.id)">Delete</button>
+      </div>
+
+      <div class="comment__body">{{ c.body }}</div>
+    </div>
+  </div>
+
+  <form class="comment-form" [formGroup]="form" (ngSubmit)="post()">
+    <textarea formControlName="body" rows="3" placeholder="Add a comment..."></textarea>
+    <button type="submit" [disabled]="form.invalid">Post Comment</button>
+  </form>
+</div>

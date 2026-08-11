@@ -1,0 +1,202 @@
+<!-- <app-navbar></app-navbar>
+
+<section class="dash">
+
+  <div class="dash__topbar">
+    <h2 class="dash__title">My Tasks</h2>
+    <button *appHasRole="['ADMIN','MANAGER','MEMBER']" type="button" class="btn primary" (click)="openCreate()">+ New Task</button>
+  </div>
+
+
+  <div class="stats">
+    <div
+      class="stats__card"
+      *ngFor="let s of statusKeys"
+      [ngClass]="{
+        'stats__card--all-task': s === 'ALL_TASK',
+        'stats__card--todo': s === 'TODO',
+        'stats__card--progress': s === 'IN_PROGRESS',
+        'stats__card--done': s === 'DONE'
+      }"
+    >
+      <div class="stats__label">{{ label(s) }}</div>
+      <div class="stats__value">{{ counts[s] }}</div>
+    </div>
+  </div>
+
+
+  <div class="tabs">
+    <button type="button" class="tabs__btn" [class.is-active]="tab==='ALL'" (click)="setTab('ALL')">ALL</button>
+    <button type="button" class="tabs__btn" [class.is-active]="tab==='TODO'" (click)="setTab('TODO')">To‑Do</button>
+    <button type="button" class="tabs__btn" [class.is-active]="tab==='IN_PROGRESS'" (click)="setTab('IN_PROGRESS')">In Progress</button>
+    <button type="button" class="tabs__btn" [class.is-active]="tab==='DONE'" (click)="setTab('DONE')">Done</button>
+  </div>
+
+
+  <div class="cards">
+    <article
+      class="card"
+      *ngFor="let task of filteredTasks; trackBy: trackById"
+      [ngClass]="{
+        'card--todo': task.status === 'TODO',
+        'card--ip': task.status === 'IN_PROGRESS',
+        'card--done': task.status === 'DONE'
+      }"
+    >
+      <header class="card__head">
+        <h4 class="card__title">{{ task.title }}</h4>
+        <span
+          class="badge"
+          [class.badge--todo]="task.status==='TODO'"
+          [class.badge--ip]="task.status==='IN_PROGRESS'"
+          [class.badge--done]="task.status==='DONE'"
+        >
+          {{ label(task.status) }}
+        </span>
+      </header>
+
+      <p class="card__desc">{{ task.description || '—' }}</p>
+      <div class="card__meta">Due: {{ task.dueDate }}</div>
+
+      <footer class="card__actions">
+        <button class="btn" [routerLink]="['/tasks', task.id]">Open</button>
+        <button type="button" class="btn ghost" (click)="openEdit(task)">Edit</button>
+        <button type="button" class="btn danger" (click)="confirmDelete(task)">Delete</button>
+      </footer>
+    </article>
+  </div>
+
+  <p class="dash__empty" *ngIf="tasks.length === 0" aria-live="polite">
+    You have no tasks yet. Create one to get started!
+  </p>
+</section>
+
+
+<div class="modal-backdrop" *ngIf="showForm"></div>
+
+<div class="modal" *ngIf="showForm">
+  <div class="modal-content">
+    <app-task-form
+      [task]="selected"
+      (saved)="onSaved($event)"
+      (cancel)="closeForm()"
+    ></app-task-form>
+  </div>
+</div> -->
+
+<app-navbar></app-navbar>
+
+<section class="dash">
+  <div class="alert" *ngIf="alertVisible">
+    <span class="alert__dot"></span>
+    <span>You have {{ overdueCount }} overdue task(s) and {{ (dueTodayCount) }} task(s) due today.</span>
+    <button type="button" class="alert__dismiss" (click)="dismissAlert()">✕ Dismiss</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="tabs">
+      <button type="button" class="tabs__btn" [class.is-active]="tab==='ALL'" (click)="setTab('ALL')">All</button>
+      <button type="button" class="tabs__btn" [class.is-active]="tab==='TODO'" (click)="setTab('TODO')">To-Do</button>
+      <button type="button" class="tabs__btn" [class.is-active]="tab==='IN_PROGRESS'" (click)="setTab('IN_PROGRESS')">In Progress</button>
+      <button type="button" class="tabs__btn" [class.is-active]="tab==='DONE'" (click)="setTab('DONE')">Done</button>
+      <button type="button" class="tabs__btn" [class.is-active]="tab==='ASSIGNED'" (click)="setTab('ASSIGNED')">Assigned to Me</button>
+    </div>
+
+    <div class="toolbar__actions">
+      <button type="button" class="btn secondary" [class.active]="sortByPriority" (click)="toggleSortPriority()">Sort: Priority</button>
+      <button type="button" class="btn secondary" (click)="toggleAnalytics()">
+        {{ showAnalytics ? 'Hide Analytics' : 'Show Analytics' }}
+      </button>
+
+      <button *appHasRole="['ADMIN','MANAGER','MEMBER']" type="button" class="btn primary" (click)="openCreate()">+ New Task</button>
+    </div>
+  </div>
+
+  <app-analytics-panel
+    *ngIf="showAnalytics"
+    [summary]="analyticsSummary"
+    [loading]="analyticsLoading"
+    [error]="analyticsError"
+    (hide)="hideAnalytics()"
+  ></app-analytics-panel>
+
+  <div class="content-grid">
+    <div class="cards">
+      <article
+        class="card"
+        *ngFor="let task of filteredTasks; trackBy: trackById"
+        [ngClass]="{
+          'card--todo': task.status === 'TODO',
+          'card--ip': task.status === 'IN_PROGRESS',
+          'card--done': task.status === 'DONE'
+        }"
+      >
+        <header class="card__head">
+          <h4 class="card__title">{{ task.title }}</h4>
+        </header>
+
+        <p class="card__desc">{{ task.description || '-' }}</p>
+
+        <div class="card__badges">
+          <span class="pill" [class.pill--todo]="task.status==='TODO'" [class.pill--ip]="task.status==='IN_PROGRESS'" [class.pill--done]="task.status==='DONE'">
+            {{ task.status }}
+          </span>
+
+          <span class="pill" [ngClass]="getPriorityClass(task.priority)">
+            {{ task.priority === 'MEDIUM' ? 'MED' : task.priority }}
+          </span>
+        </div>
+
+        <div class="subtasks-progress" *ngIf="getSubtaskSummary(task.id).total > 0">
+          <div class="subtasks-progress__text" [class.subtasks-progress__text--done]="getSubtaskSummary(task.id).completed === getSubtaskSummary(task.id).total">
+            <span *ngIf="getSubtaskSummary(task.id).completed !== getSubtaskSummary(task.id).total">
+              {{ getSubtaskSummary(task.id).completed }} / {{ getSubtaskSummary(task.id).total }} subtasks done
+            </span>
+            <span *ngIf="getSubtaskSummary(task.id).completed === getSubtaskSummary(task.id).total">All done!</span>
+          </div>
+          <div class="subtasks-progress__bar">
+            <div
+              class="subtasks-progress__fill"
+              [class.subtasks-progress__fill--done]="getSubtaskSummary(task.id).completed === getSubtaskSummary(task.id).total"
+              [style.width.%]="subtaskProgress(task.id)"
+            ></div>
+          </div>
+        </div>
+
+        <div class="card__meta assignee">{{ task.assignedToName || 'Unassigned' }}</div>
+        <div class="card__meta" [ngClass]="getDueClass(task.dueDate, task.status)">
+          Due: {{ task.dueDate }}
+        </div>
+
+        <footer class="card__actions">
+          <button *appHasRole="['ADMIN','MANAGER','MEMBER']" type="button" class="btn edit" (click)="openEdit(task)">Edit</button>
+          <button *appHasRole="['ADMIN','MANAGER']" type="button" class="btn delete" (click)="confirmDelete(task)">Delete</button>
+        </footer>
+      </article>
+
+      <p class="dash__empty" *ngIf="filteredTasks.length === 0" aria-live="polite">
+        No tasks found.
+      </p>
+    </div>
+
+    <app-activity-feed
+      [entries]="activityEntries"
+      [loading]="activityLoading"
+      [error]="activityError"
+      (refresh)="loadActivity()"
+    ></app-activity-feed>
+  </div>
+  </section>
+ <div class="modal-backdrop" *ngIf="showForm"></div>
+
+  <div class="modal" *ngIf="showForm">
+    <div class="modal-content">
+      <app-task-form
+        [task]="selected"
+        [loading]="isSaving"
+        (saved)="onSaved($event)"
+        (requestDelete)="deleteFromEditModal()"
+        (cancel)="closeForm()"
+      ></app-task-form>
+    </div>
+  </div>

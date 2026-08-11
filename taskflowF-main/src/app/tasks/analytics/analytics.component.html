@@ -1,0 +1,15 @@
+<app-navbar></app-navbar>
+
+<section class="analytics-page">
+  <div class="analytics-actions">
+    <button type="button" class="btn" (click)="backToDashboard()">Back to Dashboard</button>
+    <button type="button" class="btn" (click)="fetchSummary()">Refresh</button>
+  </div>
+
+  <app-analytics-panel
+    [summary]="summary"
+    [loading]="loading"
+    [error]="error"
+    (hide)="backToDashboard()"
+  ></app-analytics-panel>
+</section>

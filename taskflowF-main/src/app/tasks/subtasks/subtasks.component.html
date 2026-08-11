@@ -1,0 +1,48 @@
+<section class="subtasks">
+  <div class="subtasks__head">
+    <h4>Subtasks ({{ subtasks.length }})</h4>
+    <span class="subtasks__meta" *ngIf="subtasks.length > 0">{{ doneCount }} / {{ subtasks.length }} done</span>
+  </div>
+
+  <div class="subtasks__progress" *ngIf="subtasks.length > 0">
+    <div class="subtasks__bar">
+      <div class="subtasks__bar-fill" [class.subtasks__bar-fill--done]="allDone" [style.width.%]="(doneCount / subtasks.length) * 100"></div>
+    </div>
+    <div class="subtasks__progress-text" [class.subtasks__progress-text--done]="allDone">
+      <span *ngIf="!allDone">{{ doneCount }} of {{ subtasks.length }} subtasks complete</span>
+      <span *ngIf="allDone">All done!</span>
+    </div>
+  </div>
+
+  <div class="subtasks__error" *ngIf="error">{{ error }}</div>
+  <div class="subtasks__loading" *ngIf="loading">Loading subtasks...</div>
+
+  <div class="subtasks__list" *ngIf="!loading">
+    <div class="subtask" [class.subtask--done]="item.complete" *ngFor="let item of subtasks">
+      <input
+        type="checkbox"
+        class="subtask__check"
+        [checked]="item.complete"
+        [disabled]="isViewer"
+        (change)="toggle(item)"
+      />
+      <span class="subtask__title" [class.done]="item.complete">{{ item.title }}</span>
+      <span class="subtask__chip" *ngIf="item.assignedToName">{{ item.assignedToName }}</span>
+      <button type="button" class="subtask__del" *ngIf="canDelete(item)" (click)="remove(item)">Delete</button>
+    </div>
+
+    <div class="subtasks__empty" *ngIf="subtasks.length === 0">No subtasks yet.</div>
+  </div>
+
+  <div class="subtasks__add" *ngIf="!isViewer">
+    <input
+      type="text"
+      class="subtasks__input"
+      maxlength="300"
+      placeholder="Add a subtask... (press Enter to save)"
+      [(ngModel)]="newTitle"
+      (keyup.enter)="add()"
+    />
+    <button type="button" class="subtasks__btn" (click)="add()">+</button>
+  </div>
+</section>

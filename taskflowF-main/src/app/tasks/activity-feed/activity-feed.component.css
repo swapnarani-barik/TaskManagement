@@ -1,0 +1,96 @@
+.feed {
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  padding: 10px;
+  min-height: 32px;
+}
+
+.feed__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.feed__head h3 {
+  margin: 0;
+  color: #7c3aed;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.feed__refresh {
+  border: 1px solid #bb5cf6;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #7c3aed;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.feed__state {
+  color: #64748b;
+  font-weight: 600;
+  text-align: center;
+  padding: 14px 8px;
+}
+
+.feed__state-error { color: #dc2626; }
+
+.feed__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.entry:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.entry__icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.entry__message {
+  margin: 0;
+  color: #1f2937;
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.entry__time {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.entry--comment .entry__icon { background: #2563eb; }
+.entry--status .entry__icon { background: #f59e0b; }
+.entry--assign .entry__icon { background: #bb5cf6; }
+.entry--created .entry__icon { background: #22c55e; }
+.entry--priority .entry__icon { background: #ef4444; }
+.entry--deleted .entry__icon { background: #64748b; }

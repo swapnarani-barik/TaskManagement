@@ -1,0 +1,20 @@
+<aside class="feed">
+  <div class="feed__head">
+    <h3>Activity Feed</h3>
+    <button type="button" class="feed__refresh" (click)="refresh.emit()">Refresh</button>
+  </div>
+
+  <div class="feed__state" *ngIf="loading">Loading activity...</div>
+  <div class="feed__state feed__state-error" *ngIf="!loading && error">{{ error }}</div>
+  <div class="feed__state" *ngIf="!loading && !error && entries.length === 0">No activity yet.</div>
+
+  <div class="feed__list" *ngIf="!loading && !error && entries.length > 0">
+    <article class="entry" *ngFor="let entry of entries" [ngClass]="colorClass(entry.actionCode)">
+      <div class="entry__icon">{{ shortCode(entry.actionCode) }}</div>
+      <div class="entry__content">
+        <p class="entry__message">{{ entry.message }}</p>
+        <p class="entry__time">{{ entry.createdAt | relativeTime }}</p>
+      </div>
+    </article>
+  </div>
+</aside>

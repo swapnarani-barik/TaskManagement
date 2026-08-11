@@ -1,0 +1,126 @@
+/* Right pane container */
+.comments-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 16px;
+}
+
+/* Header */
+.pane-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pane-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+}
+.pane-count { font-size: .9rem; }
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: #e6e8eb;
+  margin: 10px 0;
+}
+
+/* Scrollable list */
+.thread {
+  display: grid;
+  gap: 12px;
+  overflow: auto;
+  padding-right: 4px;
+  min-height: 120px;
+  max-height: calc(100% - 160px); /* leave room for composer */
+}
+
+/* Comment row */
+.comment {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #eef3ff;
+  color: #4a67d6;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  user-select: none;
+}
+
+.bubble { display: grid; gap: 6px; }
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.author { font-weight: 700; color: #1b2430; }
+.dot { color: #b6bcc6; }
+.time { color: #7a8596; font-size: .88rem; }
+
+.icon-btn {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+.icon-btn.danger { color: #c23b36; }
+.icon-btn:hover { background: #ffe9e8; }
+
+.body {
+  color: #252f3f;
+  white-space: pre-wrap;
+  line-height: 1.45;
+}
+
+/* Composer */
+.composer {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+.composer__input {
+  width: 100%;
+  border: 1px solid #d9dee7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  color: #1b2430;
+  resize: vertical;
+  min-height: 44px;
+}
+.composer__input:focus {
+  outline: none;
+  border-color: #5b8def;
+  box-shadow: 0 0 0 3px rgba(91,141,239,.16);
+}
+.composer__btn { white-space: nowrap; }
+
+/* Muted */
+.muted { color: #7a8596; }
+
+/* Dark mode (optional) */
+:root.dark .divider, .dark .divider { background: #2a3038; }
+:root.dark .avatar, .dark .avatar { background: #1a2330; color: #6f9bff; }
+:root.dark .author, .dark .author { color: #e8edf3; }
+:root.dark .body, .dark .body { color: #dfe7f1; }
+:root.dark .time, .dark .time { color: #9aa4b2; }
+:root.dark .composer__input, .dark .composer__input {
+  background: #0f1114; border-color: #2a3038; color: #e8edf3;
+}
+:root.dark .icon-btn.danger, .dark .icon-btn.danger { color: #ff9a98; }
+:root.dark .icon-btn:hover, .dark .icon-btn:hover { background: rgba(255, 142, 142, .08); }

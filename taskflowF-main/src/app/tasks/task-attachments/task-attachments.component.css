@@ -1,0 +1,154 @@
+.attachments {
+  margin-top: 24px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 16px;
+}
+.attachments__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.attachments__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1a202c;
+}
+.attachments__count {
+  font-size: 0.85rem;
+  color: #718096;
+}
+.attachments__error {
+  color: #e53e3e;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+.attachment-empty {
+  color: #718096;
+  font-size: 0.85rem;
+  margin: 8px 0 12px;
+}
+.upload-zone {
+  border: 2px dashed #a0aec0;
+  border-radius: 6px;
+  padding: 24px 16px;
+  text-align: center;
+  background: #f7fafc;
+  transition: background 0.2s;
+}
+.upload-zone--disabled {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+  color: #a0aec0;
+}
+.upload-zone:hover:not(.upload-zone--disabled) {
+  background: #ebf8ff;
+  border-color: #4299e1;
+}
+.upload-zone p {
+  margin: 0 0 8px 0;
+  color: #4a5568;
+}
+.upload-zone .max-reached {
+  color: #e53e3e;
+  font-weight: 500;
+  margin: 0;
+}
+.upload-info {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  text-align: center;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+.attachment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.attachment-item {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fff;
+}
+.attachment-item.uploading {
+  background: #ebf8ff;
+  border-color: #4299e1;
+}
+.att-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.75rem;
+  color: white;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.att-icon--PDF { background-color: #e53e3e; }
+.att-icon--IMG { background-color: #4299e1; }
+.att-icon--DOC { background-color: #3182ce; }
+.att-icon--ZIP { background-color: #718096; }
+.att-icon--XLS { background-color: #38a169; }
+.att-icon--TXT { background-color: #a0aec0; }
+.att-details {
+  flex-grow: 1;
+  min-width: 0;
+}
+.att-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2d3748;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.att-meta {
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 2px;
+}
+.att-db-badge {
+  display: inline-block;
+  font-size: 0.70rem;
+  background: #ebf8ff;
+  color: #3182ce;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+.uploading .att-db-badge {
+  color: #718096;
+  background: transparent;
+  padding: 0;
+}
+.att-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: 12px;
+}
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+.spinner-border {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(66, 153, 225, 0.2);
+  border-top-color: #4299e1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

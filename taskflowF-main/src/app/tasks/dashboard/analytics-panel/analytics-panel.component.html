@@ -1,0 +1,57 @@
+<section class="analytics">
+  <div class="analytics__header">
+    <h3>Analytics Overview</h3>
+    <button type="button" class="analytics__toggle" (click)="hide.emit()">Hide Analytics</button>
+  </div>
+
+  <div *ngIf="loading" class="analytics__state">Loading analytics...</div>
+  <div *ngIf="!loading && error" class="analytics__state analytics__state-error">{{ error }}</div>
+  <div *ngIf="!loading && !error && !hasData" class="analytics__state">
+    No data yet - create your first task to see analytics!
+  </div>
+
+  <ng-container *ngIf="!loading && !error && hasData && summary">
+    <div class="kpis">
+      <div class="kpi kpi--blue">
+        <div class="kpi__value">{{ summary.completionRate }}%</div>
+        <div class="kpi__label">Completion Rate</div>
+      </div>
+
+      <div class="kpi kpi--red">
+        <div class="kpi__value">{{ summary.overdueCount }}</div>
+        <div class="kpi__label">Overdue Tasks</div>
+      </div>
+
+      <div class="kpi kpi--amber">
+        <div class="kpi__value">{{ summary.dueToday }}</div>
+        <div class="kpi__label">Due Today</div>
+      </div>
+
+      <div class="kpi kpi--green">
+        <div class="kpi__value">{{ summary.tasksThisWeek }}</div>
+        <div class="kpi__label">This Week</div>
+      </div>
+
+      <div class="kpi kpi--purple">
+        <div class="kpi__value">{{ summary.totalTasks }}</div>
+        <div class="kpi__label">Total Tasks</div>
+      </div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-card">
+        <h4>Task Status Breakdown</h4>
+        <div class="chart-wrap">
+          <canvas #statusChart></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4>Tasks by Priority</h4>
+        <div class="chart-wrap">
+          <canvas #priorityChart></canvas>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

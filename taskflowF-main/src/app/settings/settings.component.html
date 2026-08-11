@@ -1,0 +1,166 @@
+<app-navbar></app-navbar>
+
+<section class="settings-page">
+  <h1>Settings</h1>
+  <p class="muted">Manage profile, security, theme, notifications, and team settings.</p>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="tab" [class.active]="tab==='profile'" (click)="setTab('profile')">Profile</button>
+      <button class="tab" [class.active]="tab==='security'" (click)="setTab('security')">Security</button>
+      <button class="tab" [class.active]="tab==='theme'" (click)="setTab('theme')">Theme</button>
+      <button class="tab" [class.active]="tab==='notifications'" (click)="setTab('notifications')">Notifications</button>
+      <button class="tab" [class.active]="tab==='team'" *ngIf="canManageTeams" (click)="setTab('team')">Team Settings</button>
+    </aside>
+
+    <main class="content">
+      <div class="error" *ngIf="error">{{ error }}</div>
+
+
+<section *ngIf="tab==='profile'" class="panel">
+        <h2>Profile</h2>
+
+        <!-- Avatar -->
+        <div class="avatar-row">
+          <div
+            class="avatar"
+            [style.background]="profile.avatarColour">
+            {{ profile.fullName[0] || 'U' }}
+          </div>
+
+          <div class="avatar-colors">
+            <span
+              *ngFor="let c of avatarColors"
+              class="color-dot"
+              [style.background]="c"
+              (click)="profile.avatarColour = c">
+            </span>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <label>
+            Full Name
+            <input class="input" [(ngModel)]="profile.fullName" />
+          </label>
+
+          <label>
+            Email
+            <input class="input" [(ngModel)]="profile.email" />
+          </label>
+        </div>
+
+        <label>
+          Current Password (required only when changing email)
+          <input
+            class="input"
+            type="password"
+            [(ngModel)]="profile.currentPassword" />
+        </label>
+
+        <label>
+          Avatar Colour
+          <input class="input" [(ngModel)]="profile.avatarColour" />
+        </label>
+
+        <label>
+          Bio
+          <textarea
+            class="input"
+            rows="3"
+            maxlength="200"
+            [(ngModel)]="profile.bio">
+          </textarea>
+        </label>
+
+        <div class="actions">
+          <button
+            class="btn primary"
+            [disabled]="loading"
+            (click)="saveProfile()">
+            Save Profile
+          </button>
+
+          <button
+            class="btn danger"
+            (click)="deleteMyAccount()">
+            Delete My Account
+          </button>
+        </div>
+      </section>
+
+      <section *ngIf="tab==='security'" class="panel">
+        <h2>Security</h2>
+        <div class="grid3">
+          <label>
+            Current Password
+            <input class="input" type="password" [(ngModel)]="passwordForm.currentPassword" />
+          </label>
+          <label>
+            New Password
+            <input class="input" type="password" [(ngModel)]="passwordForm.newPassword" />
+          </label>
+          <label>
+            Confirm New Password
+            <input class="input" type="password" [(ngModel)]="passwordForm.confirmNewPassword" />
+          </label>
+        </div>
+        <button class="btn primary" [disabled]="loading" (click)="savePassword()">Update Password</button>
+
+        <h3>Active Sessions</h3>
+        <button class="btn ghost" (click)="revokeAllOthers()">Revoke All Others</button>
+        <div class="session" *ngFor="let s of sessions">
+          <div>
+            <div class="strong">{{ s.deviceHint || 'Unknown device' }}</div>
+            <div class="muted small">Last active: {{ s.lastActive | date:'medium' }}</div>
+          </div>
+          <div>
+            <span class="badge ok" *ngIf="s.active">Active</span>
+            <button class="btn danger small" *ngIf="!s.active" (click)="revokeSession(s.jti)">Revoke</button>
+          </div>
+        </div>
+      </section>
+
+      <section *ngIf="tab==='theme'" class="panel">
+        <h2>Theme</h2>
+        <div class="theme-grid">
+          <button class="theme" [class.active]="preferences.theme==='LIGHT'" (click)="setTheme('LIGHT')">Light</button>
+          <button class="theme" [class.active]="preferences.theme==='DARK'" (click)="setTheme('DARK')">Dark</button>
+          <button class="theme" [class.active]="preferences.theme==='SYSTEM'" (click)="setTheme('SYSTEM')">System</button>
+        </div>
+      </section>
+
+      <section *ngIf="tab==='notifications'" class="panel">
+        <h2>Notifications</h2>
+        <label class="switch"><input type="checkbox" [(ngModel)]="preferences.notifyAssigned" (change)="togglePreference('notifyAssigned')" /> Task assigned to me</label>
+        <label class="switch"><input type="checkbox" [(ngModel)]="preferences.notifyComment" (change)="togglePreference('notifyComment')" /> Comment on my task</label>
+        <label class="switch"><input type="checkbox" [(ngModel)]="preferences.notifySubtask" (change)="togglePreference('notifySubtask')" /> Subtask completed</label>
+        <label class="switch"><input type="checkbox" [(ngModel)]="preferences.notifyOverdue" (change)="togglePreference('notifyOverdue')" /> Task overdue</label>
+        <label class="switch"><input type="checkbox" [(ngModel)]="preferences.notifyTeam" (change)="togglePreference('notifyTeam')" /> Team updates</label>
+      </section>
+
+      <section *ngIf="tab==='team'" class="panel">
+        <h2>Team Settings</h2>
+        <div class="team-card" *ngFor="let t of teams">
+          <div class="team-head">
+            <div>
+              <div class="strong">{{ t.name }}</div>
+              <div class="muted small">{{ t.memberCount }} members · {{ t.activeTasksCount }} active tasks</div>
+            </div>
+            <div class="actions">
+              <button class="btn ghost small" (click)="editTeam(t)">Edit</button>
+              <button class="btn danger small" (click)="deleteTeam(t)">Delete</button>
+            </div>
+          </div>
+          <div class="invite-row">
+            <select class="input" [(ngModel)]="inviteByTeamId[t.id]">
+              <option [ngValue]="0">Invite member...</option>
+              <option *ngFor="let u of users" [ngValue]="u.id">{{ u.fullName }} ({{ u.role || 'MEMBER' }})</option>
+            </select>
+            <button class="btn primary small" (click)="inviteMember(t)">Invite</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</section>

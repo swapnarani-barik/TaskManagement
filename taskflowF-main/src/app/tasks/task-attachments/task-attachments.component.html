@@ -1,0 +1,57 @@
+<div class="attachments">
+  <div class="attachments__header">
+    <h4 class="attachments__title">Attachments</h4>
+    <span class="attachments__count">{{ attachments.length }} / 5 files</span>
+  </div>
+
+  <div *ngIf="error" class="attachments__error">{{ error }}</div>
+
+  <div *ngIf="!isViewer()">
+    <div class="upload-zone" [class.upload-zone--disabled]="reachedMax"
+         (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+      <ng-container *ngIf="!reachedMax">
+        <p>Drag & drop files here</p>
+        <p>or</p>
+        <button type="button" class="btn btn-primary btn-sm" (click)="fileInput.click()">Choose File</button>
+        <input type="file" #fileInput style="display: none" [accept]="ACCEPT_EXTENSIONS" (change)="onFileSelected($event)">
+      </ng-container>
+      <ng-container *ngIf="reachedMax">
+        <p class="max-reached">Maximum 5 files reached.</p>
+      </ng-container>
+    </div>
+    <div class="upload-info">
+      Max 5 MB per file - PDF, images, docs, zip - Max 5 files per task
+    </div>
+  </div>
+
+  <div class="attachment-empty" *ngIf="!loading && attachments.length === 0 && !uploading">
+    No attachments yet.
+  </div>
+
+  <div class="attachment-list">
+    <div class="attachment-item" *ngFor="let att of attachments">
+      <div class="att-icon" [ngClass]="'att-icon--' + getFileTypeIcon(att.originalName)">
+        {{ getFileTypeIcon(att.originalName) }}
+      </div>
+      <div class="att-details">
+        <div class="att-name">{{ att.originalName }}</div>
+        <div class="att-meta">
+          {{ att.mimeType }} - {{ formatBytes(att.fileSizeBytes) }} - Uploaded by {{ att.uploaderName }} - {{ formatUploadDate(att.uploadedAt) }}
+        </div>
+        <div class="att-db-badge">Stored as LONGBLOB in DB</div>
+      </div>
+      <div class="att-actions">
+        <button type="button" class="btn btn-primary btn-sm" (click)="download(att.id)">Download</button>
+        <button type="button" class="btn btn-danger btn-sm" *ngIf="canDelete(att.uploaderId)" (click)="deleteAttachment(att.id)">Delete</button>
+      </div>
+    </div>
+
+    <div class="attachment-item uploading" *ngIf="uploading">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div class="att-details">
+        <div class="att-name">{{ uploadingName || 'File' }} - Uploading...</div>
+        <div class="att-db-badge">Saving to database...</div>
+      </div>
+    </div>
+  </div>
+</div>

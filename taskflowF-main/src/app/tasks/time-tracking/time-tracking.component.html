@@ -1,0 +1,81 @@
+<section class="time">
+  <div class="time__head">
+    <h4>Time Tracker</h4>
+    <div class="time__total">Total: {{ formatMinutes(totalMinutes) }}</div>
+  </div>
+
+  <div class="time__error" *ngIf="error">{{ error }}</div>
+  <div class="time__running" *ngIf="timerRunning">Timer running...</div>
+
+  <div class="time__timer">
+    <div class="time__counter-wrap">
+      <div class="time__counter">{{ formatTimer() }}</div>
+      <div class="time__subline" *ngIf="timerRunning && timerStartAt">Timer is running - started at {{ timerStartAt | date: 'shortTime' }}</div>
+    </div>
+    <button
+      type="button"
+      class="time__btn"
+      *ngIf="!isViewer"
+      [class.time__btn--stop]="timerRunning"
+      (click)="toggleTimer()"
+    >
+      {{ timerRunning ? 'Stop Timer' : 'Start Timer' }}
+    </button>
+  </div>
+
+  <div class="time__manual" *ngIf="!isViewer">
+    <button type="button" class="time__toggle" (click)="showManual = !showManual">
+      {{ showManual ? 'Hide Manual Log' : 'Log Time Manually' }}
+    </button>
+
+    <div class="time__manual-title" *ngIf="showManual">Log Time Manually</div>
+    <div class="time__manual-hint" *ngIf="showManual">(for time worked outside the timer)</div>
+
+    <div class="time__manual-form" *ngIf="showManual">
+      <label>Hours
+        <input type="number" min="0" max="99" [(ngModel)]="manualHours" placeholder="0" />
+      </label>
+      <label>Minutes
+        <input type="number" min="0" max="59" [(ngModel)]="manualMinutes" placeholder="0" />
+      </label>
+      <label>Date
+        <input type="date" [(ngModel)]="manualDate" />
+      </label>
+      <label class="time__note">Note (optional)
+        <input type="text" maxlength="500" [(ngModel)]="manualNote" placeholder="What did you work on?" />
+      </label>
+      <button type="button" class="time__save" (click)="createManual()">Save</button>
+    </div>
+  </div>
+
+  <div class="time__table-wrap" *ngIf="!loading">
+    <div class="time__table-title">Time Log</div>
+    <table class="time__table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Duration</th>
+          <th>Type</th>
+          <th>Logged By</th>
+          <th>Note</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of logs">
+          <td>{{ formatLogDate(row.logDate) }}</td>
+          <td>{{ formatMinutes(row.durationMinutes) }}</td>
+          <td><span class="time__badge" [class.time__badge--manual]="row.manual" [class.time__badge--timer]="!row.manual">{{ row.manual ? 'Manual' : 'Timer' }}</span></td>
+          <td>{{ row.loggedByName }}</td>
+          <td>{{ row.note || '-' }}</td>
+          <td>
+            <button type="button" class="time__del" *ngIf="canDelete(row)" (click)="deleteLog(row)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="logs.length === 0">
+          <td colspan="6" class="time__empty">No logs yet.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

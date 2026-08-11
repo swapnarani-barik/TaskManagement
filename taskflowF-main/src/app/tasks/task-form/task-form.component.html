@@ -1,0 +1,72 @@
+
+
+<div class="overlay">
+  <div class="modal" [class.modal--edit]="isEdit">
+    <div class="modal__header">
+      <h3 class="modal__title">{{ isEdit ? ('Task Detail - ' + (task?.title || '')) : 'Create Task' }}</h3>
+      <button type="button" class="modal__close" (click)="cancel.emit()">✕ Close</button>
+    </div>
+
+    <div class="modal__content" [class.modal__content--edit]="isEdit">
+      <form class="form-pane" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="field">
+          <label class="label">Title</label>
+          <input class="input" formControlName="title" [class.input--invalid]="form.controls.title.touched && form.controls.title.invalid" />
+        </div>
+
+        <div class="field">
+          <label class="label">Description</label>
+          <textarea class="input textarea" rows="4" formControlName="description"></textarea>
+        </div>
+
+        <div class="grid-two">
+          <div class="field">
+            <label class="label">Status</label>
+            <select class="input" formControlName="status">
+              <option value="TODO">To-Do</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="DONE">Done</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="label">Priority</label>
+            <select class="input" formControlName="priority">
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="field">
+            <label class="label">Due Date</label>
+            <input class="input" type="date" formControlName="dueDate" [class.input--invalid]="form.controls.dueDate.touched && form.controls.dueDate.invalid" />
+          </div>
+
+          <div class="field">
+            <label class="label">Assigned To</label>
+            <select class="input" formControlName="assignedToId">
+              <option [ngValue]="null">Unassigned</option>
+              <option *ngFor="let u of users" [ngValue]="u.id">{{ u.fullName }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions" [class.actions--edit]="isEdit">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading">{{ isEdit ? 'Edit Task' : 'Create Task' }}</button>
+          <button type="button" class="btn btn-danger" *ngIf="isEdit" (click)="requestDelete.emit()">Delete</button>
+        </div>
+      </form>
+
+      <aside class="comments-pane" *ngIf="isEdit && task?.id">
+        <app-subtasks [taskId]="task?.id!"></app-subtasks>
+        <app-time-tracking [taskId]="task?.id!"></app-time-tracking>
+        <app-task-comments [taskId]="task?.id!"></app-task-comments>
+        <app-task-attachments [taskId]="task?.id!"></app-task-attachments>
+      </aside>
+    </div>
+  </div>
+</div>
